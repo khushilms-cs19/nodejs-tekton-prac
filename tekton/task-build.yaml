@@ -3,15 +3,15 @@ kind: Task
 metadata:
   name: build-nodejs-app
 spec:
-  inputs:
-    resources:
-      - name: source
-        type: git
-  outputs:
-    resources:
-      - name: image
-        type: image
-  stepTemplate:
+  # inputs:
+  #   resources:
+  #     - name: source
+  #       type: git
+  # outputs:
+  #   resources:
+  #     - name: image
+  #       type: image
+  # stepTemplate:
   params:
     - name: IMAGE_NAME
       description: The name of the image

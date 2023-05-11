@@ -1,0 +1,33 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: build-nodejs-app
+spec:
+  params:
+    - name: IMAGE_NAME
+      description: The name of the image
+      default: "nodejs-app"
+      type: string
+    - name: git-repo
+      description: The git repo where the source code is stored
+      default: "https://github.com/khushilms-cs19/nodejs-tekton-prac.git"
+      type: string
+    - name: git-revision
+      description: The git revision
+      default: "main"
+      type: string
+
+steps:
+  - name: build-nodejs
+    image: node:alpine
+    workingDir: /workspace/source
+    command:
+      - sh
+    args:
+      - -c
+      - |
+        git clone $(params.git-repo) .
+        git checkout $(params.git-revision)
+        npm install
+        npm run build
+        npm start
