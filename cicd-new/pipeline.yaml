@@ -12,6 +12,10 @@ spec:
       description: The git revision
       default: "main"
       type: string
+    - name: image-reference
+      type: string
+  workspaces:
+    - name: docker-creds
   tasks:
     - name: build
       taskRef:
@@ -21,3 +25,22 @@ spec:
           value: "$(params.git-repo)"
         - name: git-revision
           value: "$(params.git-revision)"
+    - name: build-push
+      runAfter:
+        - build
+      taskRef:
+        name: kaniko
+      # workspace:
+      #   name: source
+      #   workspace: shared-workspace
+      params:
+        - name: IMAGE
+          value: "$(params.image-reference)"
+    - name: create-deployment
+      runAfter:
+        - build-push
+      taskRef:
+        name: deploy-nodejs-app
+      params:
+        - name: IMAGE
+          value: "$(params.image-reference)"

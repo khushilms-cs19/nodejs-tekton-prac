@@ -16,18 +16,17 @@ spec:
       description: The git revision
       default: "main"
       type: string
-
-steps:
-  - name: build-nodejs
-    image: node:alpine
-    workingDir: /workspace/source
-    command:
-      - sh
-    args:
-      - -c
-      - |
-        git clone $(params.git-repo) .
-        git checkout $(params.git-revision)
-        npm install
-        npm run build
-        npm start
+  steps:
+    - name: build-nodejs
+      image: alpine
+      workingDir: /workspace/source
+      command:
+        - sh
+      args:
+        - -c
+        - |
+          apk add --no-cache git nodejs npm
+          git clone $(params.git-repo) .
+          git checkout $(params.git-revision)
+          npm install
+          node index.js

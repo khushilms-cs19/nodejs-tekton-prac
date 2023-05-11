@@ -5,8 +5,14 @@ metadata:
 spec:
   pipelineRef:
     name: nodejs-pipeline
+  workspaces:
+    - name: docker-creds
+      secret:
+        secretName: docker-creds
   params:
     - name: git-repo
       value: "https://github.com/khushilms-cs19/nodejs-tekton-prac.git"
     - name: git-revision
       value: "main"
+    - name: image-reference
+      value: "hub.docker.com/khushilms/nodejs-demo"

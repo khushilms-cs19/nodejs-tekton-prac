@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tekton-nodejs-app
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: tekton-nodejs-app-binding
+subjects:
+  - kind: ServiceAccount
+    name: tekton-nodejs-app
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tekton-nodejs-app-role
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: tekton-nodejs-app-clusterbinding
+subjects:
+  - kind: ServiceAccount
+    name: tekton-nodejs-app
+    namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: tekton-nodejs-app-clusterrole

@@ -1,0 +1,7 @@
+# ewoJImF1dGhzIjogewoJCSI2MDI0MDExNDM0NTIuZGtyLmVjci51cy1lYXN0LTEuYW1hem9uYXdzLmNvbSI6IHt9Cgl9LAoJImNyZWRzU3RvcmUiOiAiZGVza3RvcCIKfQ==
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-creds
+data:
+  config.json: ewoJImF1dGhzIjogewoJCSI2MDI0MDExNDM0NTIuZGtyLmVjci51cy1lYXN0LTEuYW1hem9uYXdzLmNvbSI6IHt9Cgl9LAoJImNyZWRzU3RvcmUiOiAiZGVza3RvcCIKfQ==
