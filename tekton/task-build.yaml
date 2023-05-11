@@ -12,12 +12,34 @@ spec:
       - name: image
         type: image
   stepTemplate:
+  params:
+    - name: IMAGE_NAME
+      description: The name of the image
+      default: "nodejs-app"
+      type: string
+    - name: git-repo
+      description: The git repo where the source code is stored
+      default: "https://github.com/khushilms-cs19/nodejs-tekton-prac.git"
+      type: string
+    - name: git-revision
+      description: The git revision
+      default: "main"
+      type: string
+    - name: tekton-image
+      description: The image name
+      default: "us.icr.io/tekton-pipeline/nodejs-app:latest"
+      type: string
+    - name: tekton-context
+      description: The context of the image
+      default: "git://github.com/khushilms-cs19/nodejs-tekton-prac/tree/main/tekton"
+      type: string
+
   steps:
     - name: create-image-and-push
       image: gcr.io/kaniko-project/executor
       command:
         - /kaniko/executor
       args:
-        - "--dockerfile=./source/ci-cd-pipeline/tekton-kubernetes/Dockerfile"
-        - "--destination=$(outputs.resources.image.url)"
-        - "--context=$(inputs.resources.source.path)/"
+        - "--dockerfile=./source/tekton/Dockerfile"
+        - "--destination=$(params.tekton-image)"
+        - "--context=$(params.tekton-context)/"

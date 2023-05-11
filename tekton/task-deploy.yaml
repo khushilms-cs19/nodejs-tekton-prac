@@ -3,15 +3,27 @@ kind: Task
 metadata:
   name: deploy-nodejs-app
 spec:
-  inputs:
-    resources:
-      - name: source
-        type: git
-    params:
-      - name: DEPLOY_ENVIRONMENT
-        description: The environment where you deploy the app
-        default: "env-dev"
-        type: string
+  params:
+    - name: DEPLOY_ENVIRONMENT
+      description: The environment where you deploy the app
+      default: "env-dev"
+      type: string
+    - name: IMAGE_NAME
+      description: The name of the image
+      default: "nodejs-app"
+      type: string
+    - name: git-repo
+      description: The git repo where the source code is stored
+      default: "https://github.com/khushilms-cs19/nodejs-tekton-prac.git"
+      type: string
+    - name: git-revision
+      description: The git revision
+      default: "main"
+      type: string
+    - name: deploy-file
+      description: The file to deploy
+      default: "https://github.com/khushilms-cs19/nodejs-tekton-prac/tree/main/tekton/task-deploy.yaml"
+      type: string
   steps:
     - name: deploy-resources
       image: lachlanevenson/k8s-kubectl
@@ -19,9 +31,9 @@ spec:
       args:
         - "apply"
         - "-f"
-        - "$(inputs.resources.source.path)/ci-cd-pipeline/tekton-kubernetes/deploy-dev.yaml"
+        - "$(params.deploy-file)"
         - "-n"
-        - "$(inputs.params.DEPLOY_ENVIRONMENT)"
+        - "$(params.DEPLOY_ENVIRONMENT)"
     - name: deploy-application
       image: lachlanevenson/k8s-kubectl
       command: ["kubectl"]
@@ -30,4 +42,4 @@ spec:
         - "restart"
         - "deployment/nodejs-app"
         - "-n"
-        - "$(inputs.params.DEPLOY_ENVIRONMENT)"
+        - "$(params.DEPLOY_ENVIRONMENT)"
