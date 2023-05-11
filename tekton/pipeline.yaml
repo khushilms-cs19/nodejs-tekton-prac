@@ -1,0 +1,42 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: nodejs-pipeline
+spec:
+  # resources:
+  #   - name: nodejs-git
+  #     type: git
+  #   - name: nodejs-image-dev
+  #     type: image
+
+  params:
+    - name: DEPLOY_ENVIRONMENT
+      description: The environment where you deploy the app
+      default: "env-dev"
+      type: string
+    - name: IMAGE_NAME
+      description: The name of the image
+      default: "nodejs-app"
+      type: string
+    - name: git-repo
+      description: The git repo where the source code is stored
+      default: "https://github.com/khushilms-cs19/nodejs-tekton-prac.git"
+      type: string
+    - name: git-revision
+      description: The git revision
+      default: "main"
+      type: string
+
+  tasks:
+    - name: build
+      taskRef:
+        name: build-nodejs-app
+
+    - name: deploy
+      taskRef:
+        name: deploy-nodejs-app
+      runAfter:
+        - build
+      params:
+        - name: DEPLOY_ENVIRONMENT
+          value: "$(params.DEPLOY_ENVIRONMENT)"

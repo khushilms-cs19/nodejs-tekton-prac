@@ -1,0 +1,4 @@
+kubectl create -f tekton/resources.yaml          -n env-ci
+kubectl create -f tekton/task-build.yaml  -n env-ci
+kubectl create -f tekton/task-deploy.yaml        -n env-ci
+kubectl create -f tekton/pipeline.yaml           -n env-ci
