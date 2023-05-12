@@ -36,11 +36,11 @@ spec:
       params:
         - name: IMAGE
           value: "$(params.image-reference)"
-    - name: create-deployment
-      runAfter:
-        - build-push
-      taskRef:
-        name: deploy-nodejs-app
-      params:
-        - name: IMAGE
-          value: "$(params.image-reference)"
+    # - name: create-deployment
+    #   runAfter:
+    #     - build-push
+    #   taskRef:
+    #     name: deploy-nodejs-app
+    #   params:
+    #     - name: IMAGE
+    #       value: "$(params.image-reference)"

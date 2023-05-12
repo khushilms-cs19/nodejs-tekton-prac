@@ -1,0 +1,12 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: nodejs-app-event-listener
+spec:
+  serviceAccountName: tekton-nodejs-app
+  triggers:
+    - name: nodejs-app-trigger
+      bindings:
+        - ref: nodejs-app-trigger-binding
+      template:
+        ref: nodejs-app-trigger-template

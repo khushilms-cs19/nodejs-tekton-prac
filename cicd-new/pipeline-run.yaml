@@ -15,4 +15,4 @@ spec:
     - name: git-revision
       value: "main"
     - name: image-reference
-      value: "hub.docker.com/khushilms/nodejs-demo"
+      value: "docker.io/khushilms/nodejs-demo"
