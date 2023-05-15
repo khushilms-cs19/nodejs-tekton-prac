@@ -26,3 +26,5 @@ spec:
       value: "main"
     - name: image-reference
       value: "khushilms/nodejs-demo"
+    - name: git-payload
+      value: "test"

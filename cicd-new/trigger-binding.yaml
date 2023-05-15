@@ -5,8 +5,11 @@ metadata:
 spec:
   params:
     - name: git-repo
-      value: $(body.head_commit.url)
+      value: $(body.repository.clone_url)
     - name: git-revision
-      value: $(body.head_commit.id)
+      # git branch
+      value: $(body.ref)
     - name: image-reference
       value: docker.io/khushilms/nodejs-demo
+    - name: git-payload
+      value: $(body)

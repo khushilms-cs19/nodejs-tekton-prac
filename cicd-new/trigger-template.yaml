@@ -11,6 +11,8 @@ spec:
       description: The git revision
       default: "main"
     - name: image-reference
+    - name: git-payload
+
   resourcetemplates:
     - apiVersion: tekton.dev/v1beta1
       kind: PipelineRun
@@ -30,3 +32,5 @@ spec:
             value: "$(tt.params.git-revision)"
           - name: image-reference
             value: "$(tt.params.image-reference)"
+          - name: git-payload
+            value: "$(tt.params.git-payload)"
