@@ -1,0 +1,63 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: nodejs-app-pipeline
+spec:
+  params:
+    - name: git-url
+      description: The URL of the Git repository containing the Node.js application.
+    - name: git-revision
+      description: The Git revision to build (e.g. branch, tag, commit hash).
+      default: main
+    - name: docker-registry-url
+      description: The URL of the Docker registry to push the Docker image to.
+    - name: docker-repo
+      description: The name of the Docker repository to push the Docker image to.
+  workspaces:
+    - name: workspace
+      description: The workspace for the pipeline to operate on.
+  tasks:
+    - name: git-clone
+      taskRef:
+        name: git-clone-task
+      params:
+        - name: url
+          value: $(params.git-url)
+        - name: revision
+          value: $(params.git-revision)
+      workspaces:
+        - name: output
+          workspace: workspace
+    - name: build-docker-image
+      taskRef:
+        name: build-docker-image-task
+      runAfter:
+        - git-clone
+      params:
+        - name: dockerfile-path
+          value: $(workspaces.workspace.path)/Dockerfile
+      workspaces:
+        - name: source
+          workspace: workspace
+        - name: image
+    - name: push-docker-image
+      taskRef:
+        name: push-docker-image-task
+      runAfter:
+        - build-docker-image
+      params:
+        - name: docker-registry-url
+          value: $(params.docker-registry-url)
+        - name: docker-repo
+          value: $(params.docker-repo)
+      workspaces:
+        - name: image
+          workspace: image
+    - name: deploy-app
+      taskRef:
+        name: deploy-app-task
+      runAfter:
+        - push-docker-image
+      workspaces:
+        - name: image
+          workspace: image

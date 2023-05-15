@@ -3,7 +3,7 @@ kind: EventListener
 metadata:
   name: nodejs-app-event-listener
 spec:
-  serviceAccountName: tekton-nodejs-app
+  serviceAccountName: tekton-robot
   triggers:
     - name: nodejs-app-trigger
       bindings:

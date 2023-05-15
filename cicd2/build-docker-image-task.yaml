@@ -1,0 +1,31 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-docker-image-task
+spec:
+  params:
+    - name: dockerfile-path
+      description: The path to the Dockerfile.
+      default: Dockerfile
+  workspaces:
+    - name: source
+      description: The workspace to build the Docker image from.
+    - name: image
+      description: The workspace to output the Docker image to.
+  steps:
+    - name: build
+      image: docker
+      command:
+        - docker
+      args:
+        - build
+        - -t
+        - $(workspaces.image.path)
+        - $(workspaces.source.path)
+      volumeMounts:
+        - name: docker-socket
+          mountPath: /var/run/docker.sock
+  volumes:
+    - name: docker-socket
+      hostPath:
+        path: /var/run/docker.sock

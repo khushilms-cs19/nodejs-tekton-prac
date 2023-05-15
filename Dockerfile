@@ -6,6 +6,6 @@ COPY package-lock.json /app/
 
 RUN cd /app && npm install
 
-EXPOSE  8080
+EXPOSE  3000
 
 CMD ["node", "/app/index.js"]

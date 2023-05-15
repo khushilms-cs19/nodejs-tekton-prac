@@ -1,0 +1,25 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: nodejs-pipelinerun
+spec:
+  serviceAccountName: tkn-sa
+  pipelineRef:
+    name: nodejs-pipeline
+  podTemplate:
+    securityContext:
+      fsGroup: 65532
+  params:
+    - name: IMAGE
+      value: khushilms/nodejs-demo
+    - name: TAG
+      value: latest
+  workspaces:
+    - name: node-workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 25Gi

@@ -1,4 +1,4 @@
-apiVersion: tekton.dev/v1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
   name: nodejs-pipeline
@@ -14,28 +14,48 @@ spec:
       type: string
     - name: image-reference
       type: string
-  workspaces:
-    - name: docker-creds
+  # workspaces:
+  #   - name: docker-creds
+  #     # secret:
+  #     #   secretName: docker-creds
+  #   - name: shared-data
   tasks:
-    - name: build
+    # - name: build
+    #   taskRef:
+    #     name: build-nodejs-app
+    #   params:
+    #     - name: git-repo
+    #       value: "$(params.git-repo)"
+    #     - name: git-revision
+    #       value: "$(params.git-revision)"
+    - name: fetch-source
       taskRef:
         name: build-nodejs-app
+      # workspaces:
+      #   - name: output
+      #     workspace: shared-data
+      # params:
+      #   - name: url
+      #     value: "$(params.git-repo)"
+      #   - name: revision
+      #     value: "$(params.git-revision)"
       params:
         - name: git-repo
           value: "$(params.git-repo)"
         - name: git-revision
           value: "$(params.git-revision)"
-    - name: build-push
-      runAfter:
-        - build
-      taskRef:
-        name: kaniko
-      # workspace:
-      #   name: source
-      #   workspace: shared-workspace
-      params:
-        - name: IMAGE
-          value: "$(params.image-reference)"
+
+    # - name: build-push
+    #   runAfter:
+    #     - fetch-source
+    #   taskRef:
+    #     name: kaniko
+    #   workspaces:
+    #     - name: source
+    #       workspace: shared-data
+    #   params:
+    #     - name: IMAGE
+    #       value: "$(params.image-reference)"
     # - name: create-deployment
     #   runAfter:
     #     - build-push

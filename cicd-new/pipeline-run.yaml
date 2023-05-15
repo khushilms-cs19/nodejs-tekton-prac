@@ -1,18 +1,28 @@
-apiVersion: tekton.dev/v1
+apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
   name: nodejs-pipeline-run
 spec:
+  serviceAccountName: tekton-robot
   pipelineRef:
     name: nodejs-pipeline
-  workspaces:
-    - name: docker-creds
-      secret:
-        secretName: docker-creds
+  # workspaces:
+  #   - name: docker-creds
+  #     secret:
+  #       secretName: docker-creds
+  #   - name: shared-data
+  #     volumeClaimTemplate:
+  #       spec:
+  #         accessModes:
+  #           - ReadWriteOnce
+  #         resources:
+  #           requests:
+  #             storage: 1Gi
+
   params:
     - name: git-repo
       value: "https://github.com/khushilms-cs19/nodejs-tekton-prac.git"
     - name: git-revision
       value: "main"
     - name: image-reference
-      value: "docker.io/khushilms/nodejs-demo"
+      value: "khushilms/nodejs-demo"

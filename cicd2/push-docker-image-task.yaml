@@ -1,0 +1,41 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: push-docker-image-task
+spec:
+  params:
+    - name: docker-registry-url
+      description: The URL of the Docker registry to push the Docker image to.
+    - name: docker-repo
+      description: The name of the Docker repository to push the Docker image to.
+  workspaces:
+    - name: image
+      description: The workspace containing the Docker image to push.
+  steps:
+    - name: login
+      image: docker
+      command:
+        - docker
+      args:
+        - login
+        - $(params.docker-registry-url)
+        - -u
+        - $(params.docker-registry-username)
+        - -p
+        - $(params.docker-registry-password)
+    - name: push
+      image: docker
+      command:
+        - docker
+      args:
+        - push
+        - $(params.docker-registry-url)/$(params.docker-repo)
+      env:
+        - name: DOCKER_CLI_EXPERIMENTAL
+          value: enabled
+      # params:
+      #   - name: docker-registry-username
+      #     description: The username to use for Docker registry authentication.
+      #   - name: docker-registry-password
+      #     description: The password to use for Docker registry authentication.
+      #     type: secret

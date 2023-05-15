@@ -1,0 +1,36 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: push-image
+spec:
+  workspaces:
+    - name: source
+      workspace: node-workspace
+  params:
+    - name: PASSWORD
+      type: string
+    - name: AWS_ACCOUNT_ID
+      type: string
+    - name: REGION
+      type: string
+    - name: USERNAME
+      type: string
+  steps:
+    - name: pull-and-push
+      image: quay.io/buildah/stable:v1.17.0
+      script: |
+        # Login to ecr
+        # buildah login \
+        # --username "$(params.USERNAME)" \
+        # --password "$(params.PASSWORD)" \
+        # "$(params.AWS_ACCOUNT_ID)".dkr.ecr."$(params.REGION)".amazonaws.com
+        buildah login -u "$(params.USERNAME)" -p "$(params.PASSWORD)" localhost:5000
+
+        # Pull and push to aws ecr
+        # buildah push khushilms/nodejs-demo docker://"$(params.AWS_ACCOUNT_ID)".dkr.ecr."$(params.REGION)".amazonaws.com/khushilms/nodejs-demo
+
+        #push to docker hub 
+        buildah push khushilms/nodejs-demo docker://khushilms/nodejs-demo
+      securityContext:
+        privileged: true

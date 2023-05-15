@@ -1,0 +1,57 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: deploy-task
+spec:
+  params:
+    - name: namespace
+      description: The namespace to deploy the Node.js application to.
+      default: default
+    - name: app-name
+      description: The name to use for the Kubernetes resources created for the Node.js application.
+    - name: image
+      description: The Docker image to use for the Node.js application.
+  steps:
+    - name: deploy
+      image: bitnami/kubectl
+      command:
+        - kubectl
+      args:
+        - apply
+        - -f
+        - <(cat <<EOF
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: $(params.app-name)
+            namespace: $(params.namespace)
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: $(params.app-name)
+            template:
+              metadata:
+                labels:
+                  app: $(params.app-name)
+              spec:
+                containers:
+                  - name: $(params.app-name)
+                    image: $(params.image)
+                    ports:
+                      - containerPort: 8080
+          ---
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: $(params.app-name)
+            namespace: $(params.namespace)
+          spec:
+            selector:
+              app: $(params.app-name)
+            ports:
+              - name: http
+                port: 80
+                targetPort: 8080
+          EOF
+          )
